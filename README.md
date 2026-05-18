@@ -388,22 +388,6 @@ Principio final:
 ```text
 Más autonomía solo después de más evidencia, más control y más confianza.
 ```
-# 12. Presentación y demo final
-
-## Estructura de 12 slides
-
-1. Service Ops OS.
-2. Problema.
-3. Usuario y cliente ideal.
-4. Solución propuesta.
-5. Arquitectura.
-6. Flujo operativo.
-7. Reglas de negocio.
-8. Enfoque ISO.
-9. Demo funcional.
-10. Validación y KPIs.
-11. Roadmap.
-12. Cierre.
 
 ## Demo
 
