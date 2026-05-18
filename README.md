@@ -353,41 +353,7 @@ _checklist_qa.md…]()
 
 ## Criterio de MVP exitoso
 
-El MVP es exitoso si reduce tiempo, detecta faltantes, bloquea pagos sin evidencia, genera outputs válidos y conserva trazabilidad básica.[12_presentacion_demo.md](https://github.com/user-attachments/files/27959461/12_presentacion_demo.md)
-
-
-
-# 11. Roadmap
-
-```text
-Fase 0: Concepto y oportunidad
-  ↓
-Fase 1: AI Intake Agent MVP
-  ↓
-Fase 2: Service Ops OS MVP en Retool
-  ↓
-Fase 3: v1.1 operable — SOP + QA + onboarding
-  ↓
-Fase 4: Piloto controlado
-  ↓
-Fase 5: Integración con correo
-  ↓
-Fase 6: Dashboard SLA
-  ↓
-Fase 7: Evidence Log + trazabilidad ISO
-  ↓
-Fase 8: Calendario y agendamiento asistido
-  ↓
-Fase 9: CRM / ERP / órdenes de servicio
-  ↓
-Fase 10: Mayor autonomía con supervisión
-```
-
-Principio final:
-
-```text
-Más autonomía solo después de más evidencia, más control y más confianza.
-```
+El MVP es exitoso si reduce tiempo, detecta faltantes, bloquea pagos sin evidencia, genera outputs válidos y conserva trazabilidad básica.
 
 ## Demo
 
@@ -406,6 +372,508 @@ Mostrar que con ubicación, equipo, contacto y referencia, pasa a `listo_para_ag
 ## Duración sugerida
 
 4 a 7 minutos.
+
+
+# 11.Proceso, decisiones de diseño y alineación con criterios de evaluación
+
+## Objetivo de esta sección
+
+En esta sección explico el proceso que seguí para construir Service Ops OS y las principales decisiones que tomé durante el desarrollo del proyecto.
+
+Mi objetivo es mostrar que el proyecto no fue solamente una implementación técnica, sino un proceso completo de análisis de problema, diseño de producto, arquitectura, experiencia de usuario, uso de inteligencia artificial, automatización, validación y documentación.
+
+## Cómo empezó el proyecto
+
+El proyecto empezó a partir de un problema real en empresas de servicios técnicos: muchas solicitudes de clientes llegan por correo, mensajes, llamadas o formularios, pero no llegan de forma estructurada.
+
+En ese contexto, el personal administrativo debe leer cada mensaje, interpretar qué pide el cliente, identificar si falta información, decidir prioridad, responder al cliente y preparar el caso para que la operación pueda avanzar.
+
+Detecté que muchos errores no ocurren al final del proceso, sino al inicio. Si el intake está incompleto, si se pierde un correo, si no se pide una ubicación exacta o si se avanza sin comprobante de pago, todo el flujo posterior queda en riesgo.
+
+Por eso decidí enfocar el proyecto en ese punto crítico: el intake operativo.
+
+## Evolución de la idea inicial
+
+La idea inicial fue crear un **AI Intake Agent**, es decir, un agente de IA capaz de transformar mensajes de clientes en solicitudes operativas claras.
+
+Al principio, el enfoque era más simple:
+
+```text
+mensaje del cliente → análisis IA → solicitud estructurada
+```
+
+Pero durante el desarrollo entendí que, para que el agente tuviera más valor operativo, no bastaba con resumir o estructurar información. El sistema también debía ayudar a controlar el flujo.
+
+Por eso evolucioné la idea hacia **Service Ops OS**, una solución más completa que combina:
+
+- intake con IA;
+- detección de faltantes;
+- reglas de negocio;
+- estados de workflow;
+- validación de pago;
+- procesamiento de respuestas;
+- alertas SLA;
+- trazabilidad orientada a procesos ISO.
+
+La evolución fue:
+
+```text
+AI Intake Agent → Service Ops OS
+```
+
+Esto convirtió el proyecto de un agente conversacional en una propuesta de sistema operativo para servicios técnicos.
+
+
+## Decisión 1: Enfocarme primero en el intake operativo
+
+Una de las primeras decisiones fue no intentar automatizar toda la operación desde el inicio.
+
+Pude haber planteado un sistema que asignara técnicos, confirmara citas, enviara correos automáticamente y gestionara todo el ciclo de servicio. Sin embargo, eso habría sido demasiado amplio para un MVP y habría aumentado el riesgo de errores.
+
+Decidí empezar por el intake porque es el punto donde se originan muchos problemas:
+
+- solicitudes incompletas;
+- información ambigua;
+- falta de ubicación;
+- falta de contacto;
+- falta de detalle técnico;
+- mala priorización;
+- seguimiento manual;
+- pagos no confirmados.
+
+Mi decisión fue resolver primero esta pregunta:
+
+```text
+¿Cómo convierto una solicitud desordenada en un caso operativo claro, priorizado y controlado?
+```
+
+Esta decisión hizo que el proyecto fuera más realista, más enfocado y más fácil de validar.
+
+
+## Decisión 2: Usar Retool como base de la aplicación
+
+Elegí Retool porque necesitaba una herramienta que me permitiera construir una aplicación operativa funcional sin desarrollar todo desde cero.
+
+Retool me permitió combinar:
+
+- tabla de casos;
+- panel de detalle;
+- botones de acción;
+- conexión con base de datos;
+- consultas SQL;
+- lógica JavaScript;
+- integración con IA;
+- estados y validaciones.
+
+Mi objetivo no era solo mostrar un prompt funcionando, sino demostrar cómo un agente de IA puede integrarse dentro de una herramienta operativa real.
+
+Por eso tomé un enfoque **Retool-first**.
+
+La arquitectura resultante fue:
+
+```text
+Retool = interfaz y control operativo
+IA = análisis y estructuración
+SQL/JS = reglas y automatización
+Base de datos = fuente de verdad
+Logs = trazabilidad
+Operador = supervisión humana
+```
+
+## Decisión 3: Separar la IA de las reglas de negocio
+
+Una decisión técnica clave fue separar lo que hace la IA de lo que hacen las reglas del sistema.
+
+La IA puede analizar un mensaje y recomendar una acción, pero no debe tener autoridad final para mover un caso si falta información crítica o evidencia obligatoria.
+
+Por eso definí esta lógica:
+
+```text
+IA analiza y recomienda.
+Reglas de negocio validan y bloquean.
+La base de datos conserva la verdad del caso.
+El operador supervisa y ejecuta.
+```
+
+Esta separación fue muy importante porque reduce el riesgo de depender ciegamente del modelo.
+
+Por ejemplo, si el cliente escribe:
+
+```text
+Ya pagué.
+```
+
+la IA puede entender que el cliente afirma haber pagado. Pero la regla de negocio debe validar si existe:
+
+```text
+comprobante
+número de referencia
+recibo
+transaction ID
+evidencia verificable
+```
+
+Si no existe evidencia, el caso no debe avanzar.
+
+Esta decisión dio origen a uno de los principios principales del proyecto:
+
+```text
+Service Ops OS no avanza por intención; avanza por evidencia.
+```
+
+
+## Decisión 4: Usar `ready_for_next_step` como señal central
+
+Durante el diseño del flujo, necesitaba una forma simple de indicar si un caso podía avanzar o no.
+
+Por eso usé el campo:
+
+```text
+ready_for_next_step
+```
+
+Este campo resume el estado operativo del caso:
+
+```text
+ready_for_next_step = false → el caso no puede avanzar
+ready_for_next_step = true → el caso puede avanzar al siguiente paso
+```
+
+Esta decisión ayudó a simplificar la experiencia del operador. En lugar de revisar muchos campos manualmente, el sistema puede mostrar claramente si el caso está bloqueado o listo.
+
+También permite controlar botones como:
+
+```text
+Agendar servicio
+```
+
+Si el caso no está listo, el botón debe permanecer deshabilitado.
+
+Esto conecta la lógica técnica con la experiencia de usuario.
+
+---
+
+## Decisión 5: Mantener una interfaz simple y en español
+
+Decidí mantener la interfaz en español porque el usuario final del sistema es personal administrativo o coordinador operativo que trabajaría en ese idioma.
+
+Usé etiquetas claras como:
+
+```text
+Analizar con IA
+Ejecutar
+Enviar al cliente
+Procesar respuesta cliente
+Agendar servicio
+Acción Recomendada
+Mensaje al cliente
+Esperando respuesta
+Listo para agendar
+```
+
+La intención fue evitar una interfaz demasiado técnica. El operador no debería tener que entender el prompt, el JSON o la lógica interna para usar el sistema.
+
+La interfaz debía responder preguntas simples:
+
+```text
+¿Qué está pasando con este caso?
+¿Qué falta?
+¿Qué debo hacer ahora?
+¿Puedo avanzar o no?
+```
+
+---
+
+## Decisión 6: Usar casos de prueba basados en riesgos reales
+
+Para validar el sistema, decidí usar casos que representaran riesgos reales de operación, no solamente ejemplos simples.
+
+Los casos principales fueron:
+
+```text
+1. Solicitud incompleta
+2. Cliente prepago sin comprobante
+3. Caso completo listo para agendar
+4. Respuesta parcial del cliente
+5. Riesgo SLA
+6. Reclamo sensible
+7. Ubicación ambigua
+```
+
+Elegí estos casos porque prueban si el sistema realmente ayuda a prevenir errores.
+
+El caso más importante es el de prepago sin comprobante, porque demuestra que el sistema no debe permitir avanzar solo porque el cliente dice que pagó.
+
+
+## Decisión 7: Incluir trazabilidad ISO-oriented
+
+Durante el desarrollo identifiqué que empresas de servicios técnicos no solo necesitan velocidad. También necesitan evidencia, consistencia y control.
+
+Por eso incorporé el enfoque de trazabilidad orientada a procesos ISO.
+
+Service Ops OS no reemplaza un sistema de gestión de calidad ni una certificación ISO. Sin embargo, ayuda a fortalecer prácticas importantes como:
+
+- registrar comunicaciones;
+- registrar cambios de estado;
+- conservar evidencia de pago;
+- documentar por qué un caso fue bloqueado;
+- mantener historial de acciones recomendadas;
+- identificar casos en riesgo SLA.
+
+Esta decisión hizo que el proyecto fuera más sólido como solución para empresas reales, no solo como ejercicio académico.
+
+
+## 12. Principales desafíos técnicos
+
+### 12.1 Mantener coherencia entre IA, reglas y estado
+
+Uno de los desafíos fue asegurar que la salida de la IA coincidiera con el estado final del caso.
+
+Por ejemplo:
+
+```text
+Si la IA detecta información faltante,
+el estado debe ser esperando_respuesta
+y ready_for_next_step debe ser false.
+```
+
+### 12.2 Evitar que el sistema avanzara con pago no confirmado
+
+Otro desafío fue controlar el caso donde el cliente dice que pagó, pero no entrega evidencia.
+
+Este caso era importante porque representa un error administrativo real.
+
+### 12.3 Procesar respuestas del cliente
+
+El sistema debía poder procesar una respuesta del cliente y decidir si los faltantes se resolvieron o si todavía faltaba información.
+
+### 12.4 Manejar JSON de la IA
+
+La salida del modelo debía ser estructurada para que Retool pudiera leerla y actualizar campos del caso.
+
+### 12.5 Controlar botones y visibilidad
+
+El botón de agendamiento debía reflejar correctamente el estado del caso. Esto fue importante para evitar que el operador saltara pasos.
+
+---
+
+## 13. Principales desafíos de UX
+
+### 13.1 Evitar saturar al operador
+
+El sistema maneja mucha lógica interna, pero el operador necesita una vista simple.
+
+Por eso organicé la interfaz alrededor de:
+
+```text
+Contexto
+Acción Recomendada
+Mensaje al cliente
+Estado
+Faltantes
+```
+
+### 13.2 Hacer visible el bloqueo
+
+Si un caso no puede avanzar, el usuario debe entender por qué.
+
+Por eso el sistema muestra campos como:
+
+```text
+waiting_for
+ready_for_next_step
+estado
+accion_recomendada
+```
+
+### 13.3 Usar lenguaje operativo
+
+Decidí usar lenguaje directo y orientado a acción, por ejemplo:
+
+```text
+Solicitar información
+Solicitar pago
+Generar orden de servicio
+Listo para agendar
+```
+
+---
+
+## 14. Principales desafíos con IA
+
+### 14.1 Evitar invenciones
+
+El agente debía evitar inventar datos como ubicación, contacto, equipo o pago.
+
+### 14.2 Pedir solo información necesaria
+
+El agente no debía pedir demasiados datos si solo faltaban elementos críticos.
+
+### 14.3 Mantener formato estructurado
+
+Para integrarse con Retool, la respuesta debía estar en formato estructurado, idealmente JSON.
+
+### 14.4 Detectar casos sensibles
+
+El agente debía reconocer situaciones donde no debía responder como si fuera un caso estándar, por ejemplo reclamos o amenazas de escalamiento.
+
+---
+
+## 15. Aprendizajes principales
+
+Los principales aprendizajes del proyecto fueron:
+
+1. Un agente de IA es más útil cuando está conectado a un flujo operativo real.
+2. La IA necesita reglas de negocio para ser confiable en procesos empresariales.
+3. El control de estados es tan importante como la respuesta generada.
+4. La UX debe hacer visible qué falta y qué acción corresponde.
+5. La trazabilidad aumenta el valor del sistema en empresas con procesos de calidad.
+6. La documentación es parte del producto, no solo un requisito académico.
+7. La autonomía debe crecer gradualmente y siempre con evidencia.
+
+---
+
+## 16. Alineación con criterios de evaluación
+
+| Criterio de evaluación | Cómo lo cubre mi proyecto | Evidencia |
+|---|---|---|
+| Completitud técnica | Integro interfaz, IA, base de datos, reglas, estados y documentación técnica | README, arquitectura, exports, screenshots |
+| Innovación y utilidad | Resuelvo un problema real de intake, pago, SLA y trazabilidad en servicios técnicos | propuesta de valor, casos de prueba, demo |
+| Calidad de interfaz de usuario | Diseño una interfaz con tabla de casos, panel operativo, mensajes y botones controlados | screenshots del dashboard y panel |
+| Profundidad en uso de IA | Uso prompt estructurado, salida JSON, detección de faltantes, prioridad, mensajes y revisión humana | prompt de sistema, pruebas, documentación IA |
+| Eficacia de automatizaciones | Automatizo análisis, actualización de estado, generación de mensaje, procesamiento de respuesta y bloqueo de agendamiento | automation_logic, demo, screenshots |
+| Calidad de documentación | Incluyo README, docs, SOP, FAQ, QA, KPIs, roadmap y guía de prueba | carpeta docs |
+| Calidad de diapositivas/presentación | Preparo estructura de presentación, guion de demo y narrativa de valor | presentación, demo script, screenshots |
+
+---
+
+## 17. Cómo explicaría mi proceso en la presentación
+
+En la presentación, resumiría mi proceso así:
+
+```text
+Primero identifiqué un problema real: el intake manual de solicitudes en empresas de servicios técnicos.
+
+Luego diseñé un agente de IA para estructurar esas solicitudes.
+
+Después evolucioné la idea hacia una aplicación en Retool, porque quería demostrar integración real con interfaz, base de datos, reglas y workflow.
+
+Durante el desarrollo separé la IA de las reglas de negocio para reducir riesgos.
+
+Finalmente agregué validación de pago, control de faltantes, SLA, trazabilidad ISO-oriented, documentación y casos de prueba.
+```
+
+---
+
+## 18. Diapositiva sugerida: Proceso y decisiones de diseño
+
+Título:
+
+```text
+Proceso y decisiones de diseño
+```
+
+Contenido sugerido:
+
+```text
+1. Identifiqué el problema: intake manual y errores administrativos.
+2. Definí el usuario: operador administrativo/coordinador.
+3. Diseñé un agente inicial de intake.
+4. Evolucioné hacia Service Ops OS en Retool.
+5. Separé IA de reglas de negocio.
+6. Incorporé pago, faltantes, SLA y trazabilidad.
+7. Documenté el sistema para GitHub, demo y futura validación.
+```
+
+---
+
+## 19. Diapositiva sugerida: Desafíos y aprendizajes
+
+Título:
+
+```text
+Desafíos y aprendizajes
+```
+
+| Desafío | Decisión tomada |
+|---|---|
+| La IA podía asumir información | Definí reglas de no invención |
+| El cliente podía decir “ya pagué” sin evidencia | Exigí comprobante o referencia |
+| El operador podía avanzar por error | Usé `ready_for_next_step` para controlar acciones |
+| El flujo podía perder trazabilidad | Incorporé communications, state_log y evidence_log |
+| La interfaz podía ser compleja | Organicé la UI en contexto, acción, mensaje y estado |
+
+Frase de cierre:
+
+```text
+El aprendizaje principal fue que la IA debe trabajar dentro de un sistema con reglas, evidencia y supervisión humana.
+```
+
+---
+
+## 20. Diapositiva sugerida: Alineación con evaluación
+
+Título:
+
+```text
+Alineación con criterios de evaluación
+```
+
+Contenido sugerido:
+
+```text
+Completitud técnica → Retool + IA + base de datos + workflow
+Innovación y utilidad → intake + pago + SLA + trazabilidad ISO
+UI → dashboard + panel operativo + botones controlados
+IA → prompt estructurado + JSON + lógica de decisión
+Automatización → análisis, ejecución, envío y procesamiento
+Documentación → README + docs + QA + roadmap
+Presentación → demo guiada con casos reales simulados
+```
+
+---
+
+## 21. Texto para incluir en README
+
+```markdown
+## Proceso y decisiones de diseño
+
+El desarrollo de Service Ops OS partió de un problema operativo real: muchas PYMEs de servicios técnicos gestionan solicitudes de clientes de forma manual, lo que genera errores, pérdida de información y poca trazabilidad.
+
+La primera decisión fue enfocarme en el intake operativo, porque es el punto donde se originan muchos errores posteriores. En lugar de automatizar toda la operación desde el inicio, el proyecto se centró en transformar mensajes desordenados en casos claros, priorizados y listos para gestionar.
+
+Durante el desarrollo, el proyecto evolucionó desde un AI Intake Agent hacia Service Ops OS, una aplicación operativa en Retool con integración de IA, base de datos, reglas de negocio, estados de workflow y trazabilidad.
+
+Una decisión técnica clave fue separar la recomendación de IA del control operativo. La IA analiza y sugiere, pero las reglas de negocio validan si el caso puede avanzar. Esto permite bloquear casos incompletos, exigir comprobante cuando aplica prepago y evitar que el sistema avance solo por intención del cliente.
+
+Desde el punto de vista UX, prioricé una interfaz simple para el operador administrativo: tabla de casos, panel de contexto, acción recomendada, mensaje al cliente y botones de flujo. El campo `ready_for_next_step` se convirtió en una señal central para habilitar o bloquear acciones como agendamiento.
+
+Uno de los principales desafíos fue diseñar un sistema que usara IA sin depender ciegamente de ella. Por eso incorporé reglas de no invención, revisión humana, validación de pago, control de SLA y registros de trazabilidad.
+
+El resultado es un sistema que no solo responde mensajes, sino que estructura, valida, bloquea, registra y prepara casos para avanzar con mayor control operativo.
+```
+
+---
+
+## 22. Conclusión de esta sección
+
+Mi proceso de construcción demuestra una evolución desde una idea de agente de intake hasta una solución operativa más completa.
+
+El proyecto integra decisiones de producto, decisiones técnicas, decisiones de UX y decisiones de control operativo.
+
+La idea central que guió el desarrollo fue:
+
+```text
+La IA aporta valor cuando está conectada a reglas, datos, flujo de trabajo y trazabilidad.
+```
+
+Por eso, Service Ops OS debe evaluarse como un sistema funcional de apoyo operativo, no solo como un prompt o chatbot.
+
+
+
+
+
+
 
 # Post-mortem del proyecto
 
